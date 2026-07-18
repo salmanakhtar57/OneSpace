@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OneSpace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="home">
+
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar__brand">
+        <span class="sidebar__brand-mark">One</span><span class="sidebar__brand-rest">Space</span>
+      </div>
+
+      <nav class="sidebar__nav">
+        <div class="sidebar__group-label">Main</div>
+
+        <a href="#" class="sidebar__item sidebar__item--disabled" aria-disabled="true" title="Coming soon">
+          <span class="dot dot--dashboard"></span> Dashboard
+          <span class="soon-badge">soon</span>
+        </a>
+
+        <a href="journal.html" class="sidebar__item" data-nav="journal">
+          <span class="dot dot--journal"></span> Journal
+        </a>
+
+        <a href="#" class="sidebar__item sidebar__item--disabled" aria-disabled="true" title="Coming soon">
+          <span class="dot dot--habits"></span> Habits
+          <span class="soon-badge">soon</span>
+        </a>
+
+        <a href="#" class="sidebar__item sidebar__item--disabled" aria-disabled="true" title="Coming soon">
+          <span class="dot dot--tasks"></span> Tasks
+          <span class="soon-badge">soon</span>
+        </a>
+
+        <div class="sidebar__group-label sidebar__group-label--later">Later</div>
+
+        <span class="sidebar__item sidebar__item--disabled" aria-disabled="true">
+          <span class="dot dot--muted"></span> Notes
+        </span>
+        <span class="sidebar__item sidebar__item--disabled" aria-disabled="true">
+          <span class="dot dot--muted"></span> Expenses
+        </span>
+        <span class="sidebar__item sidebar__item--disabled" aria-disabled="true">
+          <span class="dot dot--muted"></span> Calendar
+        </span>
+      </nav>
+
+      <div class="sidebar__footer">
+        <div class="avatar">YO</div>
+        <span>Your name</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="page-header">
+        <div>
+          <h1>Welcome to OneSpace</h1>
+          <p class="page-header__subtitle">The dashboard isn't built yet — start with your journal.</p>
+        </div>
+      </header>
+
+      <section class="panel">
+        <div class="empty-state">
+          <p class="empty-state__title">Journal is live</p>
+          <p class="empty-state__body">Habits, Tasks, and the Dashboard are coming soon.</p>
+          <a href="journal.html" class="btn btn--primary">Go to Journal</a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/common.js"></script>
+</body>
+</html>

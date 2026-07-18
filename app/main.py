@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.database.connection import engine
 from app.models.base import Base
@@ -19,7 +20,5 @@ app.add_middleware(
 
 app.include_router(journal_router)
 
+app.mount("static", StaticFiles(directory="app/static"), name="static")
 
-@app.get("/")
-def root():
-    return {"status": "ok"}

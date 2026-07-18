@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Journal · OneSpace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="journal">
+
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar__brand">
+        <span class="sidebar__brand-mark">One</span><span class="sidebar__brand-rest">Space</span>
+      </div>
+
+      <nav class="sidebar__nav">
+        <div class="sidebar__group-label">Main</div>
+
+        <a href="#" class="sidebar__item sidebar__item--disabled" aria-disabled="true" title="Coming soon">
+          <span class="dot dot--dashboard"></span> Dashboard
+          <span class="soon-badge">soon</span>
+        </a>
+
+        <a href="journal.html" class="sidebar__item" data-nav="journal">
+          <span class="dot dot--journal"></span> Journal
+        </a>
+
+        <a href="#" class="sidebar__item sidebar__item--disabled" aria-disabled="true" title="Coming soon">
+          <span class="dot dot--habits"></span> Habits
+          <span class="soon-badge">soon</span>
+        </a>
+
+        <a href="#" class="sidebar__item sidebar__item--disabled" aria-disabled="true" title="Coming soon">
+          <span class="dot dot--tasks"></span> Tasks
+          <span class="soon-badge">soon</span>
+        </a>
+
+        <div class="sidebar__group-label sidebar__group-label--later">Later</div>
+
+        <span class="sidebar__item sidebar__item--disabled" aria-disabled="true">
+          <span class="dot dot--muted"></span> Notes
+        </span>
+        <span class="sidebar__item sidebar__item--disabled" aria-disabled="true">
+          <span class="dot dot--muted"></span> Expenses
+        </span>
+        <span class="sidebar__item sidebar__item--disabled" aria-disabled="true">
+          <span class="dot dot--muted"></span> Calendar
+        </span>
+      </nav>
+
+      <div class="sidebar__footer">
+        <div class="avatar">YO</div>
+        <span>Your name</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="page-header">
+        <div>
+          <h1>Journal</h1>
+          <p class="page-header__subtitle">Your daily and weekly reflections.</p>
+        </div>
+        <button class="btn btn--primary" id="newEntryBtn">+ New entry</button>
+      </header>
+
+      <section class="panel">
+        <div id="journalStatus" class="status-line" hidden></div>
+
+        <div id="journalEmpty" class="empty-state" hidden>
+          <p class="empty-state__title">No entries yet</p>
+          <p class="empty-state__body">Write your first journal entry to start your streak.</p>
+          <button class="btn btn--primary" id="newEntryBtnEmpty">+ New entry</button>
+        </div>
+
+        <div id="journalList" class="journal-list"></div>
+      </section>
+
+      <!-- Entry editor modal -->
+      <div class="modal-overlay" id="modalOverlay" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+          <div class="modal__header">
+            <h2 id="modalTitle">New entry</h2>
+            <button class="modal__close" id="modalClose" aria-label="Close">&times;</button>
+          </div>
+
+          <form id="journalForm" class="modal__body">
+            <input type="hidden" id="entryId" value="">
+
+            <label class="field">
+              <span class="field__label">Title</span>
+              <input type="text" id="entryTitle" class="field__input" placeholder="e.g. Focused morning" required>
+            </label>
+
+            <label class="field">
+              <span class="field__label">Entry</span>
+              <textarea id="entryContent" class="field__input field__input--textarea" rows="8" placeholder="Woke up feeling..." required></textarea>
+            </label>
+
+            <div id="formError" class="form-error" hidden></div>
+
+            <div class="modal__actions">
+              <button type="button" class="btn btn--ghost" id="modalCancel">Cancel</button>
+              <button type="submit" class="btn btn--primary" id="modalSave">Save entry</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Delete confirm -->
+      <div class="modal-overlay" id="deleteOverlay" hidden>
+        <div class="modal modal--small" role="dialog" aria-modal="true">
+          <div class="modal__header">
+            <h2>Delete entry?</h2>
+            <button class="modal__close" id="deleteClose" aria-label="Close">&times;</button>
+          </div>
+          <div class="modal__body">
+            <p class="modal__text">This can't be undone.</p>
+            <div class="modal__actions">
+              <button type="button" class="btn btn--ghost" id="deleteCancel">Cancel</button>
+              <button type="button" class="btn btn--danger" id="deleteConfirm">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/journal.js"></script>
+</body>
+</html>
