@@ -20,5 +20,5 @@ app.add_middleware(
 
 app.include_router(journal_router)
 
-app.mount("static", StaticFiles(directory="app/static"), name="static")
+# app.mount("static", StaticFiles(directory="app/static"), name="static")
 
