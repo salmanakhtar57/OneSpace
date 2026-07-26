@@ -176,6 +176,46 @@ button { font-family: inherit; cursor: pointer; }
   font-size: 0.92rem;
 }
 
+/* ---------- Stat cards ---------- */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.stat-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+}
+
+.stat-card__label {
+  margin: 0 0 4px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.stat-card__value {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent-journal);
+}
+
+/* ---------- Journal list section headings ---------- */
+.journal-section-heading {
+  margin: 18px 0 8px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+.journal-section-heading:first-child {
+  margin-top: 0;
+}
+
 /* ---------- Buttons ---------- */
 .btn {
   border: none;
@@ -418,4 +458,6 @@ button { font-family: inherit; cursor: pointer; }
 
   .journal-card { flex-direction: column; }
   .journal-card__actions { align-self: flex-end; }
+
+  .stats-row { grid-template-columns: 1fr; }
 }

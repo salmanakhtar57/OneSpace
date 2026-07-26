@@ -5,6 +5,8 @@
   const listEl = document.getElementById("journalList");
   const emptyEl = document.getElementById("journalEmpty");
   const statusEl = document.getElementById("journalStatus");
+  const statWeekCount = document.getElementById("statWeekCount");
+  const statMonthCount = document.getElementById("statMonthCount");
 
   const modalOverlay = document.getElementById("modalOverlay");
   const modalTitle = document.getElementById("modalTitle");
@@ -23,37 +25,107 @@
     statusEl.hidden = !msg;
   }
 
+  // ---------- stat cards (week / month counts) ----------
+  // Week runs Monday–Sunday. Adjust here if you'd rather use a rolling
+  // 7-day window instead of the calendar week.
+  function getWeekBounds(date) {
+    const d = new Date(date);
+    const day = d.getDay(); // 0 = Sun ... 6 = Sat
+    const diffToMonday = (day === 0 ? -6 : 1) - day;
+    const start = new Date(d);
+    start.setHours(0, 0, 0, 0);
+    start.setDate(d.getDate() + diffToMonday);
+    const end = new Date(start);
+    end.setDate(start.getDate() + 7);
+    return { start, end };
+  }
+
+  function getMonthBounds(date) {
+    const start = new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0);
+    const end = new Date(date.getFullYear(), date.getMonth() + 1, 1, 0, 0, 0, 0);
+    return { start, end };
+  }
+
+  function computeStats(entries) {
+    const now = new Date();
+    const week = getWeekBounds(now);
+    const month = getMonthBounds(now);
+    let weekCount = 0;
+    let monthCount = 0;
+    for (const entry of entries) {
+      const d = new Date(entry.entry_date);
+      if (d >= week.start && d < week.end) weekCount++;
+      if (d >= month.start && d < month.end) monthCount++;
+    }
+    return { weekCount, monthCount };
+  }
+
+  // ---------- list grouping (by calendar month, newest first) ----------
+  function groupByMonth(entries) {
+    const groups = new Map();
+    for (const entry of entries) {
+      const d = new Date(entry.entry_date);
+      const key = `${d.getFullYear()}-${String(d.getMonth()).padStart(2, "0")}`;
+      if (!groups.has(key)) {
+        groups.set(key, {
+          label: d.toLocaleDateString(undefined, { month: "long", year: "numeric" }),
+          items: [],
+        });
+      }
+      groups.get(key).items.push(entry);
+    }
+    // entries arrive pre-sorted newest-first, so each month's first
+    // appearance already puts the groups in the right (descending) order.
+    return [...groups.values()];
+  }
+
   // JournalListItem only has: id, title, entry_date, updated_at — no content,
-  // so the list view can't show a snippet. Edit fetches the full record.
+  // so the list can't show a snippet. Clicking a card fetches the full
+  // record (see the listEl click handler below) before opening it for edit.
   function renderEntries(entries) {
     listEl.innerHTML = "";
 
     if (!entries || entries.length === 0) {
       emptyEl.hidden = false;
+      statWeekCount.textContent = "0";
+      statMonthCount.textContent = "0";
       return;
     }
     emptyEl.hidden = true;
 
-    for (const entry of entries) {
-      const card = document.createElement("article");
-      card.className = "journal-card";
-      card.dataset.id = entry.id;
+    const sorted = [...entries].sort((a, b) => new Date(b.entry_date) - new Date(a.entry_date));
 
-      const entryDate = formatDate(entry.entry_date);
-      const wasEdited = entry.updated_at && entry.entry_date &&
-        new Date(entry.updated_at).getTime() - new Date(entry.entry_date).getTime() > 60000;
+    const { weekCount, monthCount } = computeStats(sorted);
+    statWeekCount.textContent = String(weekCount);
+    statMonthCount.textContent = String(monthCount);
 
-      card.innerHTML = `
-        <div class="journal-card__main">
-          ${entryDate ? `<p class="journal-card__date">${escapeHtml(entryDate)}</p>` : ""}
-          <h3 class="journal-card__title">${escapeHtml(entry.title)}</h3>
-          ${wasEdited ? `<p class="journal-card__snippet">Edited ${escapeHtml(formatDate(entry.updated_at))}</p>` : ""}
-        </div>
-        <div class="journal-card__actions">
-          <button class="icon-btn icon-btn--danger" data-action="delete">Delete</button>
-        </div>
-      `;
-      listEl.appendChild(card);
+    for (const group of groupByMonth(sorted)) {
+      const heading = document.createElement("h4");
+      heading.className = "journal-section-heading";
+      heading.textContent = group.label;
+      listEl.appendChild(heading);
+
+      for (const entry of group.items) {
+        const card = document.createElement("article");
+        card.className = "journal-card";
+        card.dataset.id = entry.id;
+
+        const entryDate = formatDate(entry.entry_date);
+        const wasEdited = entry.updated_at && entry.entry_date &&
+          new Date(entry.updated_at).getTime() - new Date(entry.entry_date).getTime() > 60000;
+
+        card.innerHTML = `
+          <div class="journal-card__main">
+            ${entryDate ? `<p class="journal-card__date">${escapeHtml(entryDate)}</p>` : ""}
+            <h3 class="journal-card__title">${escapeHtml(entry.title)}</h3>
+            ${wasEdited ? `<p class="journal-card__snippet">Edited ${escapeHtml(formatDate(entry.updated_at))}</p>` : ""}
+          </div>
+          <div class="journal-card__actions">
+            <button class="icon-btn icon-btn--danger" data-action="delete">Delete</button>
+          </div>
+        `;
+        listEl.appendChild(card);
+      }
     }
   }
 
@@ -132,7 +204,6 @@
     const id = card.dataset.id;
 
     const deleteBtn = e.target.closest(`button[data-action="delete"]`)
-    
     if (deleteBtn) {
       pendingDeleteId = id;
       deleteOverlay.hidden = false;
