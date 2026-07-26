@@ -50,7 +50,6 @@
           ${wasEdited ? `<p class="journal-card__snippet">Edited ${escapeHtml(formatDate(entry.updated_at))}</p>` : ""}
         </div>
         <div class="journal-card__actions">
-          <button class="icon-btn" data-action="edit">Edit</button>
           <button class="icon-btn icon-btn--danger" data-action="delete">Delete</button>
         </div>
       `;
@@ -128,26 +127,26 @@
   });
 
   listEl.addEventListener("click", async (e) => {
-    const btn = e.target.closest("button[data-action]");
-    if (!btn) return;
     const card = e.target.closest(".journal-card");
+    if (!card) return;
     const id = card.dataset.id;
 
-    if (btn.dataset.action === "edit") {
-      btn.disabled = true;
-      try {
-        const entry = await apiRequest(`${API_BASE}/${id}`);
-        openModal({ id: entry.id, title: entry.title, content: entry.content || "" });
-      } catch (err) {
-        showStatus(`Couldn't load entry: ${err.message}`);
-      } finally {
-        btn.disabled = false;
-      }
-    }
-
-    if (btn.dataset.action === "delete") {
+    const deleteBtn = e.target.closest(`button[data-action="delete"]`)
+    
+    if (deleteBtn) {
       pendingDeleteId = id;
       deleteOverlay.hidden = false;
+      return;
+    }
+
+    card.style.cursor = "wait";
+    try {
+      const entry = await apiRequest(`${API_BASE}/${id}`);
+      openModal({ id: entry.id, title: entry.title, content: entry.content || ""})
+    } catch (err) {
+      showStatus(`Couldn't load entry: ${err.message}`);
+    } finally {
+      card.style.cursor = "";
     }
   });
 
