@@ -6,11 +6,13 @@ from typing import Optional
 class JournalCreate(BaseModel):
     title: str
     content: Optional[str] = ""
+    entry_date: Optional[datetime] = None
 
 
 class JournalUpdate(BaseModel):
     title: Optional[str] = None
     content: Optional[str] = None
+    entry_date: Optional[datetime] = None
 
 
 class JournalResponse(BaseModel):

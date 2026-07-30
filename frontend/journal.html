@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="journal">
-
   <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
 
   <div class="app-shell">
@@ -22,22 +21,16 @@
         <div class="sidebar__group-label">Main</div>
 
         <a href="#" class="sidebar__item sidebar__item--disabled" aria-disabled="true" title="Coming soon">
-          <span class="dot dot--dashboard"></span> Dashboard
-          <span class="soon-badge">soon</span>
+          <span class="dot dot--dashboard"></span> Dashboard <span class="soon-badge">soon</span>
         </a>
-
         <a href="journal.html" class="sidebar__item" data-nav="journal">
           <span class="dot dot--journal"></span> Journal
         </a>
-
         <a href="#" class="sidebar__item sidebar__item--disabled" aria-disabled="true" title="Coming soon">
-          <span class="dot dot--habits"></span> Habits
-          <span class="soon-badge">soon</span>
+          <span class="dot dot--habits"></span> Habits <span class="soon-badge">soon</span>
         </a>
-
         <a href="#" class="sidebar__item sidebar__item--disabled" aria-disabled="true" title="Coming soon">
-          <span class="dot dot--tasks"></span> Tasks
-          <span class="soon-badge">soon</span>
+          <span class="dot dot--tasks"></span> Tasks <span class="soon-badge">soon</span>
         </a>
 
         <div class="sidebar__group-label sidebar__group-label--later">Later</div>
@@ -59,7 +52,7 @@
       </div>
     </aside>
 
-    <main class="main">
+    <main class="main main--journal">
       <header class="page-header">
         <div>
           <h1>Journal</h1>
@@ -68,28 +61,50 @@
         <button class="btn btn--primary" id="newEntryBtn">+ New entry</button>
       </header>
 
-      <section class="stats-row">
-        <div class="stat-card">
-          <p class="stat-card__label">This week</p>
-          <p class="stat-card__value" id="statWeekCount">0</p>
-        </div>
-        <div class="stat-card">
-          <p class="stat-card__label">This month</p>
-          <p class="stat-card__value" id="statMonthCount">0</p>
-        </div>
-      </section>
+      <div class="journal-layout">
+        <!-- ---------- Left: stats + entries ---------- -->
+        <div class="journal-layout__main">
+          <section class="stats-row">
+            <div class="stat-card">
+              <p class="stat-card__label">This week</p>
+              <p class="stat-card__value" id="statWeekCount">0</p>
+            </div>
+            <div class="stat-card">
+              <p class="stat-card__label">This month</p>
+              <p class="stat-card__value" id="statMonthCount">0</p>
+            </div>
+          </section>
 
-      <section class="panel">
-        <div id="journalStatus" class="status-line" hidden></div>
+          <section class="panel">
+            <div id="journalStatus" class="status-line" hidden></div>
 
-        <div id="journalEmpty" class="empty-state" hidden>
-          <p class="empty-state__title">No entries yet</p>
-          <p class="empty-state__body">Write your first journal entry to start your streak.</p>
-          <button class="btn btn--primary" id="newEntryBtnEmpty">+ New entry</button>
+            <div id="journalEmpty" class="empty-state" hidden>
+              <p class="empty-state__title">No entries yet</p>
+              <p class="empty-state__body">Write your first journal entry to start your streak.</p>
+              <button class="btn btn--primary" id="newEntryBtnEmpty">+ New entry</button>
+            </div>
+            <div id="journalList" class="journal-list"></div>
+          </section>
         </div>
 
-        <div id="journalList" class="journal-list"></div>
-      </section>
+        <!-- ---------- Right: calendar ---------- -->
+        <section class="panel journal-layout__calendar">
+          <div class="calendar-toolbar">
+            <div class="calendar-toolbar__nav">
+              <button type="button" class="icon-btn" id="calPrevBtn" aria-label="Previous month">&lsaquo;</button>
+              <h2 class="calendar-toolbar__label" id="calMonthLabel">&nbsp;</h2>
+              <button type="button" class="icon-btn" id="calNextBtn" aria-label="Next month">&rsaquo;</button>
+            </div>
+            <button type="button" class="icon-btn" id="calTodayBtn">Today</button>
+          </div>
+
+          <div class="calendar-weekdays">
+            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+          </div>
+
+          <div class="calendar-grid" id="calendarGrid"></div>
+        </section>
+      </div>
 
       <!-- Entry editor modal -->
       <div class="modal-overlay" id="modalOverlay" hidden>
@@ -98,22 +113,21 @@
             <h2 id="modalTitle">New entry</h2>
             <button class="modal__close" id="modalClose" aria-label="Close">&times;</button>
           </div>
-
           <form id="journalForm" class="modal__body">
             <input type="hidden" id="entryId" value="">
-
+            <label class="field">
+              <span class="field__label">Date</span>
+              <input type="date" id="entryDate" class="field__input" required>
+            </label>
             <label class="field">
               <span class="field__label">Title</span>
               <input type="text" id="entryTitle" class="field__input" placeholder="e.g. Focused morning" required>
             </label>
-
             <label class="field">
               <span class="field__label">Entry</span>
               <textarea id="entryContent" class="field__input field__input--textarea" rows="8" placeholder="Woke up feeling..." required></textarea>
             </label>
-
             <div id="formError" class="form-error" hidden></div>
-
             <div class="modal__actions">
               <button type="button" class="btn btn--ghost" id="modalCancel">Cancel</button>
               <button type="submit" class="btn btn--primary" id="modalSave">Save entry</button>

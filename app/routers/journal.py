@@ -17,6 +17,8 @@ def list_journals(db: Session = Depends(get_db)):
 @router.post("/", response_model=JournalResponse, status_code=status.HTTP_201_CREATED)
 def create_journal(payload: JournalCreate, db: Session = Depends(get_db)):
     journal = Journal(title=payload.title, content=payload.content)
+    if payload.entry_date is not None:
+        journal.entry_date = payload.entry_date
     db.add(journal)
     db.commit()
     db.refresh(journal)
@@ -40,6 +42,8 @@ def update_journal(journal_id: int, payload: JournalUpdate, db: Session = Depend
         journal.title = payload.title
     if payload.content is not None:
         journal.content = payload.content
+    if payload.entry_date is not None:
+        journal.entry_date = payload.entry_date
     db.commit()
     db.refresh(journal)
     return journal
